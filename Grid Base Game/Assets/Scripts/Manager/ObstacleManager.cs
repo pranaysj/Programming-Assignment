@@ -26,6 +26,7 @@ public class ObstacleManager : MonoBehaviour
                 {
                     Vector3 position = new Vector3(j, z_offset, i);
                     GameObject sphere = Instantiate(spherePrefab, position, Quaternion.identity);
+                    
                     sphere.transform.position = position;
                     sphere.name = $"Sphere[{j}][{i}]";
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -13,6 +14,11 @@ public class GridManager : MonoBehaviour
         //Set the grid size
         grid = new GameObject[gridWidth, gridHeight];
 
+        StartCoroutine(GenerateGridRoutine());
+    }
+
+    private IEnumerator GenerateGridRoutine()
+    {
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
@@ -21,8 +27,9 @@ public class GridManager : MonoBehaviour
                 // Instantiate tile prefab 
                 GameObject tile = Instantiate(tilePrefab, position, Quaternion.identity);
 
+
                 // Name the tile
-                tile.name = "Tile["+x+"]["+y+"]";
+                tile.name = "Tile[" + x + "][" + y + "]";
 
                 ToggleColor(tile);
 
@@ -32,6 +39,9 @@ public class GridManager : MonoBehaviour
                 //Initialize the tile
                 TileInfo tileInfo = tile.GetComponentInChildren<TileInfo>();
                 tileInfo.Initialize(x, y);
+
+                //Yield to avoid freezing
+                yield return new WaitForSeconds(0.05f); ;
             }
         }
     }
