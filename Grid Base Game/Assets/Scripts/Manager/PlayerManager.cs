@@ -30,10 +30,15 @@ public class PlayerManager : MonoBehaviour
 
         controller = player.GetComponent<PlayerController>();
 
-        // Convert world → grid
+        //Change the color of the player
+        Renderer renderer = player.GetComponentInChildren<Renderer>();
+        Color newColor = new Color32(54, 143, 197, 255);
+        renderer.material.color = newColor;
+
+        // Set the start position
         startPosition = new Vector2Int((int)startWorldPos.x, (int)startWorldPos.z);
 
-        // Initialize with only start tile
+        // Initialize the player controller with the start position
         controller.Initialize(new List<Vector2Int> { startPosition });
     }
 
@@ -41,10 +46,12 @@ public class PlayerManager : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        // Perform the raycast
         if (Physics.Raycast(ray, out RaycastHit hitInfo))
         {
             TileInfo tileInfo = hitInfo.collider.GetComponent<TileInfo>();
 
+            // Check if we hit a tile
             if (tileInfo != null && Input.GetMouseButtonDown(0))
             {
                 endPosition = new Vector2Int(tileInfo.X, tileInfo.Y);
@@ -52,8 +59,10 @@ public class PlayerManager : MonoBehaviour
                 UpdateStartPosition();
                 GetObstacleTiles();
 
+                // Find path
                 List<Vector2Int> path = GridBasePathFInder.FindPath(startPosition, endPosition, blockedPosition);
 
+                // Move player along the path
                 if (path.Count > 0)
                 {
                     controller.Initialize(path);
